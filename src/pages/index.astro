@@ -11,7 +11,9 @@ console.log("Espèces trouvées:", species);
 
 <Layout>
   <!-- Hero Section -->
-  <div class="hero bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-lg mb-8">
+  <div
+    class="hero bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-lg mb-8"
+  >
     <div class="hero-content text-center py-8">
       <div class="max-w-md">
         <h1 class="text-4xl font-bold mb-4">📊 Analytics Hub</h1>
@@ -23,17 +25,25 @@ console.log("Espèces trouvées:", species);
   <!-- Datasets Cards -->
   <div class="mb-10">
     <h2 class="text-2xl font-bold text-center mb-6">Explorez les datasets</h2>
-    
+
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <!-- Pingouins Card -->
       <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all">
         <div class="card-body text-center">
           <div class="text-6xl mb-4">🐧</div>
-          <h3 class="card-title text-xl justify-center mb-3">Pingouins d'Antarctique</h3>
-          <p class="text-base-content/70 mb-4">Analyse des espèces de pingouins et de leurs caractéristiques morphologiques</p>
+          <h3 class="card-title text-xl justify-center mb-3">
+            Pingouins d'Antarctique
+          </h3>
+          <p class="text-base-content/70 mb-4">
+            Analyse des espèces de pingouins et de leurs caractéristiques
+            morphologiques
+          </p>
           <div class="card-actions justify-center space-x-2">
-            <a href="/rendu-dynamique" class="btn btn-primary btn-sm">🔄 Dynamique</a>
-            <a href="/rendu-statique" class="btn btn-info btn-sm">⚡ Statique</a>
+            <a href="/rendu-dynamique" class="btn btn-primary btn-sm"
+              >🔄 Dynamique</a
+            >
+            <a href="/rendu-statique" class="btn btn-info btn-sm">⚡ Statique</a
+            >
           </div>
         </div>
       </div>
@@ -42,11 +52,20 @@ console.log("Espèces trouvées:", species);
       <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all">
         <div class="card-body text-center">
           <div class="text-6xl mb-4">🚗</div>
-          <h3 class="card-title text-xl justify-center mb-3">Automobiles Vintage</h3>
-          <p class="text-base-content/70 mb-4">Données techniques des voitures classiques : puissance, consommation, performance</p>
+          <h3 class="card-title text-xl justify-center mb-3">
+            Automobiles Vintage
+          </h3>
+          <p class="text-base-content/70 mb-4">
+            Données techniques des voitures classiques : puissance,
+            consommation, performance
+          </p>
           <div class="card-actions justify-center space-x-2">
-            <a href="/voitures-dynamique" class="btn btn-primary btn-sm">🔄 Dynamique</a>
-            <a href="/voitures-statique" class="btn btn-success btn-sm">⚡ Statique</a>
+            <a href="/voitures-dynamique" class="btn btn-primary btn-sm"
+              >🔄 Dynamique</a
+            >
+            <a href="/voitures-statique" class="btn btn-success btn-sm"
+              >⚡ Statique</a
+            >
           </div>
         </div>
       </div>
@@ -57,11 +76,20 @@ console.log("Espèces trouvées:", species);
   <div class="divider">
     <span class="text-lg font-semibold">🐧 Aperçu : Données des Pingouins</span>
   </div>
-  
+
   <div class="tabs tabs-bordered mb-4">
-    <input type="radio" name="penguin_tabs" role="tab" class="tab" aria-label="🌍 Vue Globale" checked />
+    <input
+      type="radio"
+      name="penguin_tabs"
+      role="tab"
+      class="tab"
+      aria-label="🌍 Vue Globale"
+      checked
+    />
     <div role="tabpanel" class="tab-content p-6 bg-base-200 rounded-lg">
-      <h2 class="text-xl font-semibold mb-4 text-center">🌍 Toutes les espèces ensemble</h2>
+      <h2 class="text-xl font-semibold mb-4 text-center">
+        🌍 Toutes les espèces ensemble
+      </h2>
       <PlotFigure
         options={{
           title: "Toutes les espèces ensemble",
@@ -79,35 +107,47 @@ console.log("Espèces trouvées:", species);
       />
     </div>
 
-    {species.map((currentSpecies) => {
-      const speciesData = penguins.filter(p => p.species === currentSpecies);
-      
-      return (
-        <>
-          <input type="radio" name="penguin_tabs" role="tab" class="tab" aria-label={`🐧 ${currentSpecies}`} />
-          <div role="tabpanel" class="tab-content p-6 bg-base-200 rounded-lg">
-            <div class="text-center mb-4">
-              <h3 class="text-lg font-bold">🐧 Espèce {currentSpecies}</h3>
-              <div class="badge badge-primary mt-1">{speciesData.length} individus</div>
-            </div>
-            <PlotFigure
-              options={{
-                title: `${currentSpecies} - Longueur vs Profondeur du bec`,
-                marks: [
-                  Plot.dot(speciesData, {
-                    x: "culmen_length_mm",
-                    y: "culmen_depth_mm",
-                    fill: "sex",
-                    stroke: "white",
-                    r: 4,
-                  }),
-                ],
-                // Pas de légende pour éviter les erreurs SSR
-              }}
+    {
+      species.map((currentSpecies) => {
+        const speciesData = penguins.filter(
+          (p) => p.species === currentSpecies
+        );
+
+        return (
+          <>
+            <input
+              type="radio"
+              name="penguin_tabs"
+              role="tab"
+              class="tab"
+              aria-label={`🐧 ${currentSpecies}`}
             />
-          </div>
-        </>
-      );
-    })}
+            <div role="tabpanel" class="tab-content p-6 bg-base-200 rounded-lg">
+              <div class="text-center mb-4">
+                <h3 class="text-lg font-bold">🐧 Espèce {currentSpecies}</h3>
+                <div class="badge badge-primary mt-1">
+                  {speciesData.length} individus
+                </div>
+              </div>
+              <PlotFigure
+                options={{
+                  title: `${currentSpecies} - Longueur vs Profondeur du bec`,
+                  marks: [
+                    Plot.dot(speciesData, {
+                      x: "culmen_length_mm",
+                      y: "culmen_depth_mm",
+                      fill: "sex",
+                      stroke: "white",
+                      r: 4,
+                    }),
+                  ],
+                  // Pas de légende pour éviter les erreurs SSR
+                }}
+              />
+            </div>
+          </>
+        );
+      })
+    }
   </div>
 </Layout>
