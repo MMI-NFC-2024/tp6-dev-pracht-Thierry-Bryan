@@ -1,18 +1,49 @@
 ---
 import "../styles/global.css";
+import Header from "../components/Header.astro";
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <title>Astro Basics</title>
+    <title>🐧 Pingouins Analytics</title>
+    
+    <!-- Script pour le thème -->
+    <script is:inline>
+      // Initialiser le thème au chargement
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
   </head>
   <body>
-    <slot />
+    <Header />
+    <main class="container mx-auto px-4 py-8">
+      <slot />
+    </main>
+    
+    <!-- Script pour gérer le changement de thème -->
+    <script is:inline>
+      document.addEventListener('DOMContentLoaded', () => {
+        const themeToggle = document.getElementById('theme-toggle');
+        
+        if (themeToggle) {
+          // Initialiser la checkbox
+          const currentTheme = localStorage.getItem('theme') || 'light';
+          themeToggle.checked = currentTheme === 'dark';
+          
+          // Écouter les changements
+          themeToggle.addEventListener('change', (e) => {
+            const newTheme = e.target.checked ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+          });
+        }
+      });
+    </script>
   </body>
 </html>
 
