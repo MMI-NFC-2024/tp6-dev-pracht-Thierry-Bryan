@@ -19,29 +19,46 @@ console.log("Espèces trouvées:", species);
     <div class="space-y-2">
       <a
         href="/rendu-dynamique"
-        class="bg-blue-800 text-white px-4 py-2 rounded inline-block mr-2"
+        class="btn btn-primary mr-2"
         >Routes Dynamiques</a
       >
       <a
         href="/rendu-statique"
-        class="bg-blue-800 text-white px-4 py-2 rounded inline-block"
+        class="btn btn-success"
         >Routes Statiques</a
       >
     </div>
   </div>
 
-  <div class="mb-8">
-    <h2 class="text-xl mb-4">Tous les graphiques par espèce :</h2>
+  <!-- Onglets simples avec DaisyUI -->
+  <div class="tabs tabs-bordered mb-4">
+    <input type="radio" name="penguin_tabs" role="tab" class="tab" aria-label="Vue Globale" checked />
+    <div role="tabpanel" class="tab-content p-6">
+      <h2 class="text-xl mb-4">Graphique global :</h2>
+      <PlotFigure
+        options={{
+          title: "Toutes les espèces ensemble",
+          marks: [
+            Plot.dot(penguins, {
+              x: "culmen_length_mm",
+              y: "culmen_depth_mm",
+              stroke: "species",
+              fill: "species",
+              r: 3,
+            }),
+          ],
+          color: { legend: true },
+        }}
+      />
+    </div>
 
-    {
-      species.map((currentSpecies) => {
-        // Filtrer les données pour l'espèce courante
-        const speciesData = penguins.filter(
-          (p) => p.species === currentSpecies
-        );
-
-        return (
-          <div class="mb-8 p-4 border rounded">
+    {species.map((currentSpecies) => {
+      const speciesData = penguins.filter(p => p.species === currentSpecies);
+      
+      return (
+        <>
+          <input type="radio" name="penguin_tabs" role="tab" class="tab" aria-label={currentSpecies} />
+          <div role="tabpanel" class="tab-content p-6">
             <h3 class="text-lg font-bold mb-4">
               Espèce : {currentSpecies} ({speciesData.length} individus)
             </h3>
@@ -61,25 +78,8 @@ console.log("Espèces trouvées:", species);
               }}
             />
           </div>
-        );
-      })
-    }
+        </>
+      );
+    })}
   </div>
-
-  <h2 class="text-xl mb-4">Graphique global :</h2>
-  <PlotFigure
-    options={{
-      title: "Toutes les espèces ensemble",
-      marks: [
-        Plot.dot(penguins, {
-          x: "culmen_length_mm",
-          y: "culmen_depth_mm",
-          stroke: "species",
-          fill: "species",
-          r: 3,
-        }),
-      ],
-      color: { legend: true },
-    }}
-  />
 </Layout>

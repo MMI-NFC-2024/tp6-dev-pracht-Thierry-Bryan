@@ -7,26 +7,61 @@ const species = [...new Set(penguins.map((p) => p.species))].filter((s) => s);
 ---
 
 <Layout>
-  <h1 class="text-2xl font-bold mb-6">Routes Dynamiques - Liste des Espèces</h1>
+  <div class="container mx-auto px-4">
+    <!-- Breadcrumb -->
+    <div class="breadcrumbs text-sm mb-6">
+      <ul>
+        <li><a href="/" class="link link-hover">🏠 Accueil</a></li>
+        <li>Routes Dynamiques</li>
+      </ul>
+    </div>
 
-  <div class="mb-4">
-    <a href="/" class="text-blue-800 hover:underline">← Retour à l'accueil</a>
+    <!-- Hero -->
+    <div class="hero bg-gradient-to-r from-blue-400 to-indigo-600 text-white rounded-lg mb-8">
+      <div class="hero-content text-center">
+        <div class="max-w-md">
+          <h1 class="text-4xl font-bold">🔄 Routes Dynamiques</h1>
+          <p class="py-4">Pages générées à la demande</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alert Info -->
+    <div class="alert alert-info mb-6">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      <div>
+        <h3 class="font-bold">Routes dynamiques</h3>
+        <div class="text-xs">Ces pages sont générées à la demande avec <code class="badge badge-sm">prerender = false</code></div>
+      </div>
+    </div>
+
+    <!-- Species Cards -->
+    <h2 class="text-2xl font-bold mb-6">🐧 Sélectionnez une espèce :</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {
+        species.map((speciesName) => (
+          <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
+            <div class="card-body">
+              <h2 class="card-title text-blue-700">
+                🐧 {speciesName}
+                <div class="badge badge-primary">Dynamique</div>
+              </h2>
+              <p class="text-sm text-gray-600">Analyse détaillée de l'espèce</p>
+              <div class="card-actions justify-end">
+                <a href={`/rendu-dynamique/${speciesName}`} class="btn btn-primary">
+                  Voir les données
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        ))
+      }
+    </div>
   </div>
-
-  <h2 class="text-xl mb-4">Sélectionnez une espèce :</h2>
-
-  <ul class="space-y-2">
-    {
-      species.map((speciesName) => (
-        <li>
-          <a
-            href={`/rendu-dynamique/${speciesName}`}
-            class="block p-3 bg-blue-100 hover:bg-blue-200 rounded border text-blue-800 font-medium"
-          >
-            Espèce : {speciesName}
-          </a>
-        </li>
-      ))
-    }
-  </ul>
 </Layout>
