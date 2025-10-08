@@ -10,8 +10,24 @@
   <div class="navbar-center hidden lg:flex">
     <ul class="menu menu-horizontal px-1">
       <li><a href="/">Accueil</a></li>
-      <li><a href="/rendu-dynamique">Routes Dynamiques</a></li>
-      <li><a href="/rendu-statique">Routes Statiques</a></li>
+      <li>
+        <details>
+          <summary>🐧 Pingouins</summary>
+          <ul class="p-2 bg-base-100 rounded-t-none">
+            <li><a href="/rendu-dynamique">Routes Dynamiques</a></li>
+            <li><a href="/rendu-statique">Routes Statiques</a></li>
+          </ul>
+        </details>
+      </li>
+      <li>
+        <details>
+          <summary>🚗 Voitures</summary>
+          <ul class="p-2 bg-base-100 rounded-t-none">
+            <li><a href="/voitures-dynamique">Routes Dynamiques</a></li>
+            <li><a href="/voitures-statique">Routes Statiques</a></li>
+          </ul>
+        </details>
+      </li>
     </ul>
   </div>
   
@@ -49,8 +65,12 @@
       </div>
       <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
         <li><a href="/">Accueil</a></li>
+        <li class="menu-title">🐧 Pingouins</li>
         <li><a href="/rendu-dynamique">Routes Dynamiques</a></li>
         <li><a href="/rendu-statique">Routes Statiques</a></li>
+        <li class="menu-title">🚗 Voitures</li>
+        <li><a href="/voitures-dynamique">Routes Dynamiques</a></li>
+        <li><a href="/voitures-statique">Routes Statiques</a></li>
       </ul>
     </div>
   </div>

@@ -1,0 +1,183 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import PlotFigure from "../../components/PlotFigure.astro";
+import cars from "../../assets/cars.json";
+import * as Plot from "@observablehq/plot";
+
+// IMPORTANT : Générer les pages statiquement avec getStaticPaths
+export async function getStaticPaths() {
+  // Générer automatiquement la liste des années
+  const years = [...new Set(cars.map(c => c.year))].sort();
+  
+  // Retourner un tableau de paramètres pour chaque année
+  return years.map(year => ({
+    params: { 
+      year: year.toString()
+    },
+    props: {
+      // Passer les données filtrées en props
+      filteredCars: cars.filter(c => c.year === year)
+    }
+  }));
+}
+
+// Récupérer les props et params
+const { year } = Astro.params;
+const { filteredCars } = Astro.props;
+
+// Configuration du graphique
+const plotOptions = {
+  title: `Voitures ${year} - Puissance vs Poids (Statique)`,
+  grid: true,
+  marks: [
+    Plot.dot(filteredCars, {
+      x: "weight (lb)",
+      y: "power (hp)",
+      fill: "cylinders",
+      stroke: "white",
+      r: 5,
+      fillOpacity: 0.8,
+    }),
+  ],
+  x: {
+    label: "Poids (lb)",
+  },
+  y: {
+    label: "Puissance (hp)",
+  },
+  // Pas de légende pour éviter les erreurs SSR
+};
+
+// Configuration du deuxième graphique : Graphique en barres par nombre de cylindres
+const cylinderCounts = new Map();
+filteredCars.forEach(car => {
+  const cylinders = car.cylinders;
+  cylinderCounts.set(cylinders, (cylinderCounts.get(cylinders) || 0) + 1);
+});
+
+const cylinderArray = Array.from(cylinderCounts.entries()).map(([cylinders, count]) => ({
+  cylinders: cylinders.toString(),
+  count: count
+}));
+
+const plotOptions2 = {
+  title: `Voitures ${year} - Répartition par cylindres`,
+  marks: [
+    Plot.barY(cylinderArray, {
+      x: "cylinders",
+      y: "count",
+      fill: "cylinders",
+      stroke: "white",
+    }),
+  ],
+  x: {
+    label: "Nombre de cylindres",
+  },
+  y: {
+    label: "Nombre de voitures",
+    grid: true,
+  },
+  // Pas de légende pour éviter les erreurs SSR
+};
+
+// Configuration du troisième graphique : Histogramme de la consommation
+const plotOptions3 = {
+  title: `Voitures ${year} - Distribution de la consommation`,
+  marks: [
+    Plot.rectY(filteredCars, Plot.binX({y: "count"}, {x: "economy (mpg)"})),
+  ],
+  x: {
+    label: "Consommation (mpg)",
+  },
+  y: {
+    label: "Nombre de voitures",
+    grid: true,
+  },
+  color: {
+    scheme: "blues"
+  },
+  // Pas de légende pour éviter les erreurs SSR
+};
+---
+
+<Layout>
+  <div class="breadcrumbs text-sm mb-6">
+    <ul>
+      <li><a href="/" class="link link-hover">🏠 Accueil</a></li>
+      <li><a href="/voitures-statique" class="link link-hover">Voitures Statiques</a></li>
+      <li>{year}</li>
+    </ul>
+  </div>
+
+  <div class="hero bg-gradient-to-r from-green-400 to-emerald-600 text-white rounded-lg mb-8">
+    <div class="hero-content">
+      <div class="text-center">
+        <h1 class="text-4xl font-bold">🚗 Voitures {year}</h1>
+        <p class="py-4">{filteredCars.length} véhicules analysés</p>
+        <div class="badge badge-success">⚡ Route Statique</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats stats-vertical lg:stats-horizontal shadow mb-8 w-full">
+    <div class="stat">
+      <div class="stat-figure text-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" class="inline-block w-8 h-8 stroke-current" fill="none" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+        </svg>
+      </div>
+      <div class="stat-title">Puissance moyenne</div>
+      <div class="stat-value text-primary">{Math.round(filteredCars.reduce((sum, car) => sum + (car["power (hp)"] || 0), 0) / filteredCars.length)} hp</div>
+    </div>
+    
+    <div class="stat">
+      <div class="stat-figure text-secondary">
+        <svg xmlns="http://www.w3.org/2000/svg" class="inline-block w-8 h-8 stroke-current" fill="none" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+        </svg>
+      </div>
+      <div class="stat-title">Consommation moyenne</div>
+      <div class="stat-value text-secondary">{Math.round(filteredCars.reduce((sum, car) => sum + (car["economy (mpg)"] || 0), 0) / filteredCars.length)} mpg</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-figure text-accent">
+        <svg xmlns="http://www.w3.org/2000/svg" class="inline-block w-8 h-8 stroke-current" fill="none" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
+        </svg>
+      </div>
+      <div class="stat-title">Total véhicules</div>
+      <div class="stat-value text-accent">{filteredCars.length}</div>
+    </div>
+  </div>
+
+  <!-- Charts Container -->
+  <div class="space-y-6">
+    <!-- Premier graphique : Nuage de points -->
+    <div class="card bg-base-100 shadow-xl">
+      <div class="card-body">
+        <h2 class="card-title text-xl mb-4">📊 Poids vs Puissance (Nuage de points)</h2>
+        <PlotFigure options={plotOptions} />
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Deuxième graphique : Graphique en barres -->
+      <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+          <h2 class="card-title text-xl mb-4">📊 Répartition par cylindres (Barres)</h2>
+          <PlotFigure options={plotOptions2} />
+        </div>
+      </div>
+
+      <!-- Troisième graphique : Histogramme -->
+      <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+          <h2 class="card-title text-xl mb-4">📈 Distribution consommation (Histogramme)</h2>
+          <PlotFigure options={plotOptions3} />
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>

@@ -11,22 +11,28 @@ console.log("Espèces trouvées:", species);
 
 <Layout>
   <h1 class="text-3xl font-bold mb-6">
-    Analyse des Pingouins - TP Routes Dynamiques
+    Analytics Hub - TP Routes Dynamiques
   </h1>
 
   <div class="mb-8">
-    <h2 class="text-xl mb-4">Navigation :</h2>
-    <div class="space-y-2">
-      <a
-        href="/rendu-dynamique"
-        class="btn btn-primary mr-2"
-        >Routes Dynamiques</a
-      >
-      <a
-        href="/rendu-statique"
-        class="btn btn-success"
-        >Routes Statiques</a
-      >
+    <h2 class="text-xl mb-4">Datasets disponibles :</h2>
+    
+    <!-- Pingouins -->
+    <div class="mb-6">
+      <h3 class="text-lg font-semibold mb-2">🐧 Pingouins</h3>
+      <div class="space-x-2">
+        <a href="/rendu-dynamique" class="btn btn-primary btn-sm">Routes Dynamiques</a>
+        <a href="/rendu-statique" class="btn btn-info btn-sm">Routes Statiques</a>
+      </div>
+    </div>
+
+    <!-- Voitures -->
+    <div class="mb-6">
+      <h3 class="text-lg font-semibold mb-2">🚗 Voitures</h3>
+      <div class="space-x-2">
+        <a href="/voitures-dynamique" class="btn btn-primary btn-sm">Routes Dynamiques</a>
+        <a href="/voitures-statique" class="btn btn-success btn-sm">Routes Statiques</a>
+      </div>
     </div>
   </div>
 
@@ -47,7 +53,7 @@ console.log("Espèces trouvées:", species);
               r: 3,
             }),
           ],
-          color: { legend: true },
+          // Pas de légende pour éviter les erreurs SSR
         }}
       />
     </div>
@@ -74,7 +80,7 @@ console.log("Espèces trouvées:", species);
                     r: 4,
                   }),
                 ],
-                color: { legend: true },
+                // Pas de légende pour éviter les erreurs SSR
               }}
             />
           </div>

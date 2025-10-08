@@ -1,0 +1,29 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import cars from "../../assets/cars.json";
+
+// Générer automatiquement la liste des années
+const years = [...new Set(cars.map(c => c.year))].sort();
+---
+
+<Layout>
+  <h1 class="text-3xl font-bold mb-8">🔄 Voitures - Routes Dynamiques</h1>
+  
+  <p class="text-lg mb-8 text-base-content/70">
+    Sélectionnez une année pour voir l'analyse détaillée :
+  </p>
+  
+  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+    {
+      years.map((year) => (
+        <a href={`/voitures-dynamique/${year}`} class="card bg-base-100 shadow-lg hover:shadow-xl transition-all hover:scale-105">
+          <div class="card-body items-center text-center p-4">
+            <h2 class="card-title text-xl">🚗</h2>
+            <h3 class="text-lg font-semibold">{year}</h3>
+            <div class="badge badge-primary mt-2">Dynamique</div>
+          </div>
+        </a>
+      ))
+    }
+  </div>
+</Layout>
