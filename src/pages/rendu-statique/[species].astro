@@ -1,0 +1,86 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import PlotFigure from "../../components/PlotFigure.astro";
+import penguins from "../../assets/penguins.json";
+import * as Plot from "@observablehq/plot";
+
+// IMPORTANT : Générer les pages statiquement avec getStaticPaths
+export async function getStaticPaths() {
+  // Générer automatiquement la liste des espèces
+  const species = [...new Set(penguins.map((p) => p.species))].filter((s) => s);
+
+  // Retourner un tableau de paramètres pour chaque espèce
+  return species.map((speciesName) => ({
+    params: {
+      species: speciesName,
+    },
+    props: {
+      // Passer les données filtrées en props
+      filteredPenguins: penguins.filter((p) => p.species === speciesName),
+    },
+  }));
+}
+
+// Récupérer les props et params
+const { species } = Astro.params;
+const { filteredPenguins } = Astro.props;
+
+// Configuration du graphique
+const plotOptions = {
+  title: `Analyse de l'espèce ${species} (Statique)`,
+  grid: true,
+  marks: [
+    Plot.dot(filteredPenguins, {
+      x: "culmen_length_mm",
+      y: "culmen_depth_mm",
+      fill: "sex",
+      stroke: "white",
+      r: 5,
+      fillOpacity: 0.8,
+    }),
+  ],
+  x: {
+    label: "Longueur du bec (mm)",
+  },
+  y: {
+    label: "Profondeur du bec (mm)",
+  },
+  color: { legend: true },
+};
+---
+
+<Layout>
+  <div class="mb-4">
+    <a href="/rendu-statique" class="text-green-600 hover:underline"
+      >← Retour à la liste</a
+    >
+  </div>
+
+  <h1 class="text-2xl font-bold mb-6">Espèce : {species}</h1>
+
+  <div class="mb-6 p-4 bg-green-50 rounded">
+    <p>
+      <strong>{filteredPenguins.length}</strong> pingouin(s) trouvé(s) pour l'espèce
+      <strong>{species}</strong>
+    </p>
+    <p class="text-sm text-gray-600 mt-2">
+      ⚡ <em>Route statique</em> - Page pré-générée au build avec getStaticPaths()
+    </p>
+  </div>
+
+  <PlotFigure options={plotOptions} />
+
+  <div class="mt-8">
+    <h3 class="text-lg font-bold mb-4">Statistiques :</h3>
+    <div class="grid grid-cols-2 gap-4">
+      <div class="bg-gray-50 p-4 rounded">
+        <strong>Mâles :</strong>
+        {filteredPenguins.filter((p) => p.sex === "MALE").length}
+      </div>
+      <div class="bg-gray-50 p-4 rounded">
+        <strong>Femelles :</strong>
+        {filteredPenguins.filter((p) => p.sex === "FEMALE").length}
+      </div>
+    </div>
+  </div>
+</Layout>

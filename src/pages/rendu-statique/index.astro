@@ -1,0 +1,41 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import penguins from "../../assets/penguins.json";
+
+// Générer automatiquement la liste des espèces
+const species = [...new Set(penguins.map((p) => p.species))].filter((s) => s);
+---
+
+<Layout>
+  <h1 class="text-2xl font-bold mb-6">Routes Statiques - Liste des Espèces</h1>
+
+  <div class="mb-4">
+    <a href="/" class="text-blue-600 hover:underline">← Retour à l'accueil</a>
+  </div>
+
+  <h2 class="text-xl mb-4">Sélectionnez une espèce :</h2>
+
+  <ul class="space-y-2">
+    {
+      species.map((speciesName) => (
+        <li>
+          <a
+            href={`/rendu-statique/${speciesName}`}
+            class="block p-3 bg-green-100 hover:bg-green-200 rounded border text-green-800 font-medium"
+          >
+            Espèce : {speciesName}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+
+  <div class="mt-6 p-4 bg-gray-100 rounded">
+    <p class="text-sm text-gray-600">
+      <strong>Routes statiques :</strong> Ces pages sont pré-générées au moment du
+      build. Elles utilisent <code>getStaticPaths()</code> au lieu de <code
+        >prerender = false</code
+      >
+    </p>
+  </div>
+</Layout>

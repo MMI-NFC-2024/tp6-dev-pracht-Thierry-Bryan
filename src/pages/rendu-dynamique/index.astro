@@ -1,0 +1,32 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import penguins from "../../assets/penguins.json";
+
+// Générer automatiquement la liste des espèces
+const species = [...new Set(penguins.map((p) => p.species))].filter((s) => s);
+---
+
+<Layout>
+  <h1 class="text-2xl font-bold mb-6">Routes Dynamiques - Liste des Espèces</h1>
+
+  <div class="mb-4">
+    <a href="/" class="text-blue-800 hover:underline">← Retour à l'accueil</a>
+  </div>
+
+  <h2 class="text-xl mb-4">Sélectionnez une espèce :</h2>
+
+  <ul class="space-y-2">
+    {
+      species.map((speciesName) => (
+        <li>
+          <a
+            href={`/rendu-dynamique/${speciesName}`}
+            class="block p-3 bg-blue-100 hover:bg-blue-200 rounded border text-blue-800 font-medium"
+          >
+            Espèce : {speciesName}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</Layout>

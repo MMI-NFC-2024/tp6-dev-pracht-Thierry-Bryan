@@ -1,0 +1,71 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import PlotFigure from "../../components/PlotFigure.astro";
+import penguins from "../../assets/penguins.json";
+import * as Plot from "@observablehq/plot";
+
+// IMPORTANT : Désactiver le pré-rendu pour les routes dynamiques
+export const prerender = false;
+
+// Récupérer le paramètre d'URL
+const { species } = Astro.params;
+
+// Filtrer les pingouins pour l'espèce spécifiée
+const filteredPenguins = penguins.filter((p) => p.species === species);
+
+// Configuration du graphique
+const plotOptions = {
+  title: `Analyse de l'espèce ${species}`,
+  grid: true,
+  marks: [
+    Plot.dot(filteredPenguins, {
+      x: "culmen_length_mm",
+      y: "culmen_depth_mm",
+      fill: "sex",
+      stroke: "white",
+      r: 5,
+      fillOpacity: 0.8,
+    }),
+  ],
+  x: {
+    label: "Longueur du bec (mm)",
+  },
+  y: {
+    label: "Profondeur du bec (mm)",
+  },
+  color: { legend: true },
+};
+---
+
+<Layout>
+  <div class="mb-4">
+    <a href="/rendu-dynamique" class="text-blue-600 hover:underline"
+      >← Retour à la liste</a
+    >
+  </div>
+
+  <h1 class="text-2xl font-bold mb-6">Espèce : {species}</h1>
+
+  <div class="mb-6 p-4 bg-blue-50 rounded">
+    <p>
+      <strong>{filteredPenguins.length}</strong> pingouin(s) trouvé(s) pour l'espèce
+      <strong>{species}</strong>
+    </p>
+  </div>
+
+  <PlotFigure options={plotOptions} />
+
+  <div class="mt-8">
+    <h3 class="text-lg font-bold mb-4">Statistiques :</h3>
+    <div class="grid grid-cols-2 gap-4">
+      <div class="bg-gray-50 p-4 rounded">
+        <strong>Mâles :</strong>
+        {filteredPenguins.filter((p) => p.sex === "MALE").length}
+      </div>
+      <div class="bg-gray-50 p-4 rounded">
+        <strong>Femelles :</strong>
+        {filteredPenguins.filter((p) => p.sex === "FEMALE").length}
+      </div>
+    </div>
+  </div>
+</Layout>
