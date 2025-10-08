@@ -3,19 +3,83 @@ import PlotFigure from "../components/PlotFigure.astro";
 import Layout from "../layouts/Layout.astro";
 import * as Plot from "@observablehq/plot";
 import penguins from "../assets/penguins.json";
+
+// Déterminer automatiquement la liste des espèces
+const species = [...new Set(penguins.map((p) => p.species))].filter((s) => s);
+console.log("Espèces trouvées:", species);
 ---
 
 <Layout>
-  <h1 class="text-2xl">Test Astro et Plot (Observablehq)</h1>
+  <h1 class="text-3xl font-bold mb-6">
+    Analyse des Pingouins - TP Routes Dynamiques
+  </h1>
+
+  <div class="mb-8">
+    <h2 class="text-xl mb-4">Navigation :</h2>
+    <div class="space-y-2">
+      <a
+        href="/rendu-dynamique"
+        class="bg-blue-800 text-white px-4 py-2 rounded inline-block mr-2"
+        >Routes Dynamiques</a
+      >
+      <a
+        href="/rendu-statique"
+        class="bg-blue-800 text-white px-4 py-2 rounded inline-block"
+        >Routes Statiques</a
+      >
+    </div>
+  </div>
+
+  <div class="mb-8">
+    <h2 class="text-xl mb-4">Tous les graphiques par espèce :</h2>
+
+    {
+      species.map((currentSpecies) => {
+        // Filtrer les données pour l'espèce courante
+        const speciesData = penguins.filter(
+          (p) => p.species === currentSpecies
+        );
+
+        return (
+          <div class="mb-8 p-4 border rounded">
+            <h3 class="text-lg font-bold mb-4">
+              Espèce : {currentSpecies} ({speciesData.length} individus)
+            </h3>
+            <PlotFigure
+              options={{
+                title: `${currentSpecies} - Longueur vs Profondeur du bec`,
+                marks: [
+                  Plot.dot(speciesData, {
+                    x: "culmen_length_mm",
+                    y: "culmen_depth_mm",
+                    fill: "sex",
+                    stroke: "white",
+                    r: 4,
+                  }),
+                ],
+                color: { legend: true },
+              }}
+            />
+          </div>
+        );
+      })
+    }
+  </div>
+
+  <h2 class="text-xl mb-4">Graphique global :</h2>
   <PlotFigure
     options={{
+      title: "Toutes les espèces ensemble",
       marks: [
         Plot.dot(penguins, {
           x: "culmen_length_mm",
           y: "culmen_depth_mm",
           stroke: "species",
+          fill: "species",
+          r: 3,
         }),
       ],
+      color: { legend: true },
     }}
   />
 </Layout>
